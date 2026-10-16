@@ -1,0 +1,296 @@
+{
+  "rollout_timestamp": "2026-01-04 00:00:00",
+  "seed": 42,
+  "interval_minutes": 5,
+  "regressions": {
+    "memory_leak": "Model-B on build-2 gains ~0.35% memory/hour after rollout",
+    "battery_drain": "Model-C on build-2 drains 2.0x faster after rollout"
+  },
+  "data_quality_faults": {
+    "dropped_rows": 806,
+    "duplicate_rows": 240,
+    "out_of_range_values": 80
+  },
+  "devices": [
+    {
+      "device_id": "dev-000",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": true,
+      "regression": null
+    },
+    {
+      "device_id": "dev-001",
+      "hardware_model": "Model-B",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-002",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": "battery_drain"
+    },
+    {
+      "device_id": "dev-003",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-004",
+      "hardware_model": "Model-B",
+      "region": "IN-West",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-005",
+      "hardware_model": "Model-C",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "battery_drain"
+    },
+    {
+      "device_id": "dev-006",
+      "hardware_model": "Model-A",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": null
+    },
+    {
+      "device_id": "dev-007",
+      "hardware_model": "Model-B",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-008",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-009",
+      "hardware_model": "Model-A",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": null
+    },
+    {
+      "device_id": "dev-010",
+      "hardware_model": "Model-B",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-011",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-012",
+      "hardware_model": "Model-A",
+      "region": "US-East",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-013",
+      "hardware_model": "Model-B",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-014",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-015",
+      "hardware_model": "Model-A",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-016",
+      "hardware_model": "Model-B",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-017",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": "battery_drain"
+    },
+    {
+      "device_id": "dev-018",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-019",
+      "hardware_model": "Model-B",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-020",
+      "hardware_model": "Model-C",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "battery_drain"
+    },
+    {
+      "device_id": "dev-021",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": true,
+      "regression": null
+    },
+    {
+      "device_id": "dev-022",
+      "hardware_model": "Model-B",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-023",
+      "hardware_model": "Model-C",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "battery_drain"
+    },
+    {
+      "device_id": "dev-024",
+      "hardware_model": "Model-A",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": null
+    },
+    {
+      "device_id": "dev-025",
+      "hardware_model": "Model-B",
+      "region": "EU-North",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-026",
+      "hardware_model": "Model-C",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-027",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-028",
+      "hardware_model": "Model-B",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-029",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-030",
+      "hardware_model": "Model-A",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-031",
+      "hardware_model": "Model-B",
+      "region": "US-East",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-032",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-033",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-034",
+      "hardware_model": "Model-B",
+      "region": "IN-West",
+      "upgraded_to_build_2": true,
+      "regression": "memory_leak"
+    },
+    {
+      "device_id": "dev-035",
+      "hardware_model": "Model-C",
+      "region": "EU-North",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-036",
+      "hardware_model": "Model-A",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-037",
+      "hardware_model": "Model-B",
+      "region": "US-East",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-038",
+      "hardware_model": "Model-C",
+      "region": "IN-West",
+      "upgraded_to_build_2": false,
+      "regression": null
+    },
+    {
+      "device_id": "dev-039",
+      "hardware_model": "Model-A",
+      "region": "US-East",
+      "upgraded_to_build_2": true,
+      "regression": null
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+// 1. Hourly average memory by hardware model + build
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| summarize avg_mem = avg(mem_pct) by hardware_model, os_build, bin(timestamp, 1h)
+| render timechart
+
+// 2. Percentiles per cohort
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| summarize p50 = percentile(mem_pct, 50), p95 = percentile(mem_pct, 95), p99 = percentile(mem_pct, 99) by hardware_model, os_build
+| order by p95 desc
+
+// 3. Top 10 devices by average memory
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| summarize avg_mem = avg(mem_pct) by device_id, hardware_model, os_build
+| top 10 by avg_mem desc
+
+// 4. Devices per cohort
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| summarize devices = dcount(device_id) by hardware_model, os_build

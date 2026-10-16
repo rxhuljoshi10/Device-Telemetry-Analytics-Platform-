@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.venv/
+# Large/regenerable data (the fleet CSV is reproducible with: python generate_fleet.py --seed 42)
+data/*.csv
+# Never commit credentials or cluster secrets
+.env

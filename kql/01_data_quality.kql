@@ -1,0 +1,24 @@
+// ---- DATA QUALITY CHECKS ----
+
+// 1. Row count, devices and time range
+DeviceTelemetry
+| summarize rows = count(), devices = dcount(device_id), first_ts = min(timestamp), last_ts = max(timestamp)
+
+// 2. Duplicate records (same device + timestamp)
+DeviceTelemetry
+| summarize copies = count() by device_id, timestamp
+| where copies > 1
+| summarize duplicate_keys = count()
+
+// 3. Out-of-range values
+DeviceTelemetry
+| where cpu_pct < 0 or cpu_pct > 100 or mem_pct < 0 or mem_pct > 100
+| summarize bad_rows = count() by hardware_model
+
+// 4. Missing heartbeats: expected 288 samples/device/day at a 5-minute interval
+DeviceTelemetry
+| where device_id startswith "dev-"        // synthetic fleet only
+| summarize actual = dcount(timestamp) by device_id, day = startofday(timestamp)
+| extend expected = 288, missing_pct = round(100.0 * (expected - actual) / expected, 2)
+| where missing_pct > 2
+| order by missing_pct desc

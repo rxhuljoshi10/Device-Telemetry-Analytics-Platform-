@@ -1,0 +1,4 @@
+DeviceTelemetry
+| where hardware_model == "Local-Machine"
+| summarize avg_cpu = avg(cpu_pct), avg_mem = avg(mem_pct), avg_battery = avg(battery_pct), samples = count() by bin(timestamp, 10m)
+| render timechart

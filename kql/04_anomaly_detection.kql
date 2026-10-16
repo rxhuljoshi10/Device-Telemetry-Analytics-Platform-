@@ -1,0 +1,46 @@
+// 1. Which cohorts are anomalous? (table: use this for the dashboard tile)
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+let start = toscalar(Clean | summarize min(timestamp));
+let stop = toscalar(Clean | summarize max(timestamp));
+Clean
+| make-series avg_mem = avg(mem_pct) default = real(null) on timestamp from start to stop step 1h by hardware_model
+| extend avg_mem = series_fill_linear(avg_mem)
+| extend (flag, score, baseline) = series_decompose_anomalies(avg_mem, 1.5, 24, 'avg', 96)
+| mv-expand timestamp to typeof(datetime), flag to typeof(int)
+| where flag != 0
+| summarize first_anomaly = min(timestamp), anomalous_hours = count() by hardware_model
+| order by anomalous_hours desc
+
+// 2. Anomaly chart for Model-B build-2 (take a screenshot of this one)
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+let start = toscalar(Clean | summarize min(timestamp));
+let stop = toscalar(Clean | summarize max(timestamp));
+Clean
+| where hardware_model == "Model-B" and os_build == "build-2"
+| make-series avg_mem = avg(mem_pct) default = real(null) on timestamp from start to stop step 1h
+| extend avg_mem = series_fill_linear(avg_mem)
+| extend (flag, score, baseline) = series_decompose_anomalies(avg_mem, 1.5, 24)
+| render anomalychart with (anomalycolumns = flag)
+
+// 3. Z-score vs the pre-rollout baseline (days where the average is > 3 sigma above normal)
+let rollout = datetime(2026-01-04);
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+let baseline = Clean
+    | where timestamp < rollout
+    | summarize mu = avg(mem_pct), sigma = stdev(mem_pct) by hardware_model;
+Clean
+| where timestamp >= rollout
+| summarize avg_mem = avg(mem_pct) by hardware_model, os_build, day = startofday(timestamp)
+| join kind=inner baseline on hardware_model
+| extend z = round((avg_mem - mu) / sigma, 2)
+| where z > 3
+| order by day asc

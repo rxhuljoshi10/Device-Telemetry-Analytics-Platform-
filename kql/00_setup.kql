@@ -1,0 +1,14 @@
+// Run in the ADX web UI (one command at a time)
+
+.create table DeviceTelemetry (
+    timestamp: datetime,
+    device_id: string,
+    os_build: string,
+    hardware_model: string,
+    region: string,
+    cpu_pct: real,
+    mem_pct: real,
+    battery_pct: real
+)
+
+// CSV ingestion maps columns by position, so the CSV column order must match the schema above.

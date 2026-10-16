@@ -1,0 +1,45 @@
+// 1. Memory after rollout: build-2 vs build-1 (build-1 = control group)
+let rollout = datetime(2026-01-04);
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| where timestamp >= rollout
+| summarize avg_mem = avg(mem_pct) by hardware_model, os_build
+| evaluate pivot(os_build, take_any(avg_mem))
+| extend mem_increase_pts = round(todouble(['build-2']) - todouble(['build-1']), 2)
+| order by mem_increase_pts desc
+
+// 2. Battery drain (% per hour) after rollout: build-2 vs build-1
+let rollout = datetime(2026-01-04);
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| where isnotnull(battery_pct)
+| sort by device_id asc, timestamp asc
+| serialize
+| extend prev_batt = prev(battery_pct), prev_dev = prev(device_id), prev_ts = prev(timestamp)
+| where prev_dev == device_id and isnotnull(prev_batt) and isnotnull(prev_ts) and battery_pct < prev_batt and timestamp > prev_ts
+| extend drain_per_hr = (todouble(prev_batt) - todouble(battery_pct)) / (datetime_diff('millisecond', timestamp, prev_ts) / 3600000.0)
+| where timestamp >= rollout
+| summarize avg_drain = avg(drain_per_hr) by hardware_model, os_build
+| evaluate pivot(os_build, take_any(avg_drain))
+| extend drain_ratio = round(todouble(['build-2']) / todouble(['build-1']), 2)
+| order by drain_ratio desc
+
+// 3. Memory growth slope per device after rollout (leak detector)
+let rollout = datetime(2026-01-04);
+let Clean = DeviceTelemetry
+    | where hardware_model != "Local-Machine"
+    | where cpu_pct between (0 .. 100) and mem_pct between (0 .. 100)
+    | summarize arg_max(timestamp, *) by device_id, timestamp;
+Clean
+| where timestamp >= rollout
+| make-series mem = avg(mem_pct) default = real(null) on timestamp step 1h by device_id, hardware_model, os_build
+| extend mem = series_fill_linear(mem)
+| extend (rsquare, slope, variance, rvariance, interception, line_fit) = series_fit_line(mem)
+| project device_id, hardware_model, os_build, slope_pct_per_hr = round(slope, 3), rsquare = round(rsquare, 2)
+| top 10 by slope_pct_per_hr desc
